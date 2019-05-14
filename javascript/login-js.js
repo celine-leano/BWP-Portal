@@ -5,8 +5,7 @@ Script for login page
  */
 let loginForm = document.getElementById('login-form');
 
-
-loginForm.onsubmit = function (e) {
+loginForm.onsubmit = function(e) {
     let email = document.getElementById('email-input').value;
     let password = document.getElementById('password-input').value;
     let loginErr = document.getElementById('loginErr');
