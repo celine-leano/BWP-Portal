@@ -1,0 +1,103 @@
+<!--
+CodedInk
+BWP-Portal/model/medication-modal.html
+Modal that contains checkboxes to filter out medication
+-->
+<div class="modal fade" id="PDQModal" tabindex="-1" role="dialog" aria-labelledby="PDQModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="PDQModalLabel">PDQ Scores</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="PDQForm" action="#">
+                    <div class="form-group">
+                        <div class="row">
+                            <span>Please choose current score, previous score, or first score you would like to see.</span>
+                            <select>
+                                <option value="current">Current</option>
+                            </select>
+                        </div><br>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <!-- 'Mobility', 'Daily Living', 'Emotional',
+                    'Stigma', 'Social', 'Cognition', 'Communication', 'Body' -->
+
+                                <label>Mobility</label>
+                                    <select class="pdqCheck">
+                                        <option value="none">---</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                    </select><br>
+                                <label>Daily Living</label>
+                                    <select class="pdqCheck">
+                                        <option value="none">---</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                    </select><br>
+                                <label>Emotional</label>
+                                    <select class="pdqCheck">
+                                        <option value="none">---</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                    </select><br>
+                                <label>Stigma</label>
+                                    <select class="pdqCheck">
+                                        <option value="none">---</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                    </select><br>
+                                <label>Social</label>
+                                    <select class="pdqCheck">
+                                        <option value="none">---</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                    </select><br>
+                                <label>Cognition</label>
+                                    <select class="pdqCheck">
+                                        <option value="none">---</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                    </select><br>
+                                <label>Communication</label>
+                                    <select class="pdqCheck">
+                                        <option value="none">---</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                    </select><br>
+                                <label>Body</label>
+                                    <select class="pdqCheck">
+                                        <option value="none">---</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                    </select><br>
+                            </div>
+                            <div class="col-sm-6 card">
+                                <p>
+                                    Low - PDQ Score of 0 to 33.<br>
+                                    Medium - PDQ Score of 34 to 66.<br>
+                                    High - PDQ Score of 67 to 100.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <input type="submit" name="filterPDQ" value="Filter" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

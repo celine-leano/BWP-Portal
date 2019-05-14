@@ -4,16 +4,20 @@
  * Dashboard containing a data table with information such as medication and symptoms
  * for patients (represented by patient ID)
  -->
+
 <include href="views/header.html"></include>
 <body>
 <div class="container">
 
+
+    <div id="api-data"></div>
+
     <div class="row mb-2 mt-2">
-        <div class="col-8 input-group input-group-md">
+        <div class="col-5 input-group input-group-md">
             <div class="input-group-prepend">
                 <span class="input-group-text">Search</span>
             </div>
-            <input type="text" class="form-control" id="search" onkeyup="myFunction()">
+            <input type="text" class="form-control" id="search" onkeyup="search()">
         </div>
         <div class="col-1">
             <span>Filter By: </span>
@@ -28,6 +32,16 @@
                     data-target="#symptomsModal">Symptoms
             </button>
         </div>
+        <div class="col-1">
+            <button id="btnFilterPDQ" type="button" class="btn btn-primary ml-4" data-toggle="modal"
+                    data-target="#PDQModal">PDQ
+            </button>
+        </div>
+        <div class="col-1">
+            <button id="btnFilterClear" type="button" class="btn btn-primary ml-4" onclick="clearFilters()">
+                Clear
+            </button>
+        </div>
     </div>
 
     <div class="row col-12">
@@ -36,6 +50,7 @@
             <th>ID</th>
             <th>Medication</th>
             <th>Symptoms</th>
+            <th>Current PDQ Score</th>
             </thead>
 
             <!--Get info for table-->
@@ -45,10 +60,19 @@
     </div>
 </div>
 
+<div id="result">
+</div>
+
 <!-- Include modals -->
 <include href="views/medication-modal.html"></include>
 <include href="views/symptoms-modal.html"></include>
+<include href="views/table-modal.html"></include>
+<include href="views/PDQ-modal.html"></include>
 
 </body>
+
 <script src="javascript/dashboard-scripts.js"></script>
+<script src="javascript/modal-filters.js"></script>
+<script>printTable()</script>
+
 </html>
