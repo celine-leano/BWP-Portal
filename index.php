@@ -1,6 +1,8 @@
 <?php
 /**
  * Routing for BWP Portal
+ *
+ * Created By: Jordan Smith, Brooks Eshe, Sam Gabriel, Celine Leano
  */
 
 //Turn on error reporting
@@ -40,14 +42,22 @@ $f3->route('GET|POST /', function ($f3)
     echo Template::instance()->render('views/login.html');
 });
 
+//dashboard route
 $f3->route('GET|POST /dashboard', function ($f3)
 {
+    //reroute to login page if not yet logged in
     if (!isset($_SESSION['user']))
     {
         $f3->reroute('/');
     }
 
     echo Template::instance()->render('views/dashboard.html');
+});
+
+// test symptoms
+$f3->route('GET|POST /symptoms', function ($f3)
+{
+    echo Template::instance()->render('views/symptoms-test.html');
 });
 
 
