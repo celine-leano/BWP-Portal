@@ -33,7 +33,7 @@ let paMap = {
 
 //FILTER THE CHECKBOX MODALS FOR MEDICATION
 //on submit, check what boxes are checked
-$('#medicationForm, #symptomsForm, #PDQForm, #physicalForm').on('submit', function (e) {
+$('#filter').on('click', function (e) {
     e.preventDefault();
 
     let checkedMedications = [];
@@ -136,7 +136,7 @@ $('#medicationForm, #symptomsForm, #PDQForm, #physicalForm').on('submit', functi
 
 
     //hide the modal
-    $('#medicationModal, #symptomsModal, #PDQModal').modal('hide');
+    $('#filterModal').modal('hide');
 
 });
 
@@ -153,7 +153,7 @@ function filterPDQRow(index, row, filterKey) {
     }
 
     //split row into an array
-    let categoryList = row.children[3].innerText.split(", ");
+    let categoryList = row.children[3].innerText.split(",");
 
     //get the score
     let categoryScore = parseInt(categoryList[index].substring(categoryList[index].length - 3));
@@ -185,22 +185,22 @@ function filterPhysicalAssessment(index, row, filterKey)
     }
 
     //split row into an array
-    let categoryList = row.children[4].innerText.split(", ");
+    let categoryList = row.children[4].innerText.split(",");
 
     //get the score
     let categoryAssessment = parseInt(categoryList[index].substring(categoryList[index].length - 3));
-    let assessmentType = categoryList[index].replace(/[0-9: -]/g, '');
+    let assessmentType = categoryList[index].replace(/[0-9: \n]/g, '');
 
 
     //check if score is within given range
     if (filterKey === "low") {
-        if(assessmentType === "FAB" || assessmentType === "SittoStandScore")
+        if(assessmentType === "FullertonAdvancedBalance" || assessmentType === "SittoStandScore")
         {
             if (categoryAssessment <= 33) {
                 return true;
             }
         }
-        else if(assessmentType === "UpScore")
+        else if(assessmentType === "TimedUpAndGo")
         {
             if(categoryAssessment <= 0)
             {
@@ -209,13 +209,13 @@ function filterPhysicalAssessment(index, row, filterKey)
         }
     }
     else if (filterKey === "medium") {
-        if(assessmentType === "FAB" || assessmentType === "SittoStandScore")
+        if(assessmentType === "FullertonAdvancedBalanced" || assessmentType === "SittoStandScore")
         {
             if (categoryAssessment > 33 && categoryAssessment <= 66) {
                 return true
             }
         }
-        else if(assessmentType === "UpScore")
+        else if(assessmentType === "TimedUpAndGo")
         {
             if(categoryAssessment > 0 && categoryAssessment < 100)
             {
@@ -224,13 +224,13 @@ function filterPhysicalAssessment(index, row, filterKey)
         }
     }
     else if (filterKey === "high") {
-        if(assessmentType === "FAB" || assessmentType === "SittoStandScore")
+        if(assessmentType === "FullertonAdvancedBalanced" || assessmentType === "SittoStandScore")
         {
             if (categoryAssessment > 66) {
                 return true;
             }
         }
-        else if(assessmentType === "UpScore")
+        else if(assessmentType === "TimedUpAndGo")
         {
             if(categoryAssessment > 99)
             {
@@ -303,19 +303,6 @@ function filterTable(medications, symptoms, pdq, assessment) {
             }
         }
     }
-}
-
-/**
- * Displays data for specific row in a modal
- * @param row the row to display the data for
- */
-function getUserData(row) {
-    let medication = row.cells[1].innerHTML;
-    let symptoms = row.cells[2].innerHTML;
-    let pdq = row.cells[3].innerHTML;
-    let assessment = row.cells[4].innerHTML;
-    $('#modal-content').html("<b>Medication:</b> " + medication + "<br><b>Symptoms: </b>" + symptoms + "<br><b>PDQ:</b> "
-        + pdq + "<b>Phyical Assessment:</b>" + assessment);
 }
 
 /**
