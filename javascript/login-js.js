@@ -6,7 +6,7 @@ Script for login page
 let loginForm = document.getElementById('login-form');
 
 loginForm.onsubmit = function (e) {
-    let email = document.getElementById('email-input').value;
+    let username = document.getElementById('username-input').value;
     let password = document.getElementById('password-input').value;
     let loginErr = document.getElementById('loginErr');
 
@@ -16,7 +16,7 @@ loginForm.onsubmit = function (e) {
         contentType: 'application/json',
         dataType: 'json',
         data: JSON.stringify({
-          "username": email,
+          "username": username,
           "password": password
         }),
         success: function (result) {
@@ -48,16 +48,4 @@ loginForm.onsubmit = function (e) {
             }
         })
     }
-
-    //display error if login is invalid
-    // if (email !== "admin" || password !== "admin") {
-    //     loginErr.classList.remove('d-none');
-    //     isValid = false;
-    // }
-    //
-    // if (!isValid) {
-    //     e.preventDefault();
-    // // }
-    //
-    // return isValid;
 };

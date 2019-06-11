@@ -8,21 +8,21 @@ Login page
 <div class="container d-flex h-100 w-100">
     <div class="row my-auto w-100">
         <div class="col-sm-10 offset-sm-1">
-            <div class="card">
+            <h1 class="display-4 text-center">BWP Research Portal</h1>
+            <div class="card shadow-sm">
                 <div class="card-body">
-                    <h3 class="card-title">Login</h3>
-                    <span class="text-danger d-none" id="loginErr">Invalid Login Information</span>
                     <form id="login-form" class="w-75 mx-auto my-5" method="post" action="#">
                         <div class="form-group">
-                            <label for="email-input">Email:</label>
-                            <input class="form-control" id="email-input" name="email-input">
+                            <label for="username-input">Username</label>
+                            <input class="form-control" id="username-input" name="username-input">
                         </div>
                         <div class="form-group">
-                            <label for="password-input">Password:</label>
+                            <label for="password-input">Password</label>
                             <input type="password" class="form-control" id="password-input" name="password-input">
                         </div>
+                        <span class="text-danger d-none" id="loginErr">Invalid Login Information</span>
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary mt-4">Log In</button>
+                            <button type="submit" class="btn btn-primary mt-4 rounded-0">Log In</button>
                         </div>
                         <div class="text-center">
                             <p class="mt-3 small">Note: If you do not have login credentials please contact Rock Steady Boxing to gain access
