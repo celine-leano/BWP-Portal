@@ -10,64 +10,101 @@ Script for dashboard
 function printTable() {
     $(document).ready(function () {
 
+        let medications;
+        let symptoms;
         let medResults;
         let symptomResults;
         let pdqResults;
         let physicalResults;
 
-        //get data from API
-        $.ajax({
+        let medRequest = $.ajax({
+
+                url: 'https://bwp-app.herokuapp.com/api/research/',
+                type: 'GET',
+                dataType: 'json',
+                success: function (result) {
+
+                    medications = getMeds(result);
+                },
+
+                beforeSend: setHeader //set the access token before making the AJAX call
+            });
+
+        let symptomRequest = $.ajax({
+
+                url: 'https://bwp-app.herokuapp.com/api/research/',
+                type: 'GET',
+                dataType: 'json',
+                success: function (result) {
+
+                    symptoms = getSymptoms(result);
+                },
+
+                beforeSend: setHeader //set the access token before making the AJAX call
+            });
+
+        let pdqRequest = $.ajax({
+
             url: 'https://bwp-app.herokuapp.com/api/research/',
             type: 'GET',
             dataType: 'json',
             success: function (result) {
-                medResults = getMeds(result);
-                symptomResults = getSymptoms(result);
-                pdqResults = getPDQ(result);
-                physicalResults = getPA(result);
 
-                //don't display the row if it has no data
-                for (let i = 0; i < medResults.length; i++) {
-                    if (medResults[i] == "N/A" && symptomResults[i] == "N/A"
-                        && formatPDQ((pdqResults[i])) == "N/A" && physicalResults[i] == "N/A") {
-                        continue;
+                pdqResults = getPDQ(result);
+            },
+
+            beforeSend: setHeader //set the access token before making the AJAX call
+        });
+
+        let physicalRequest = $.ajax({
+
+            url: 'https://bwp-app.herokuapp.com/api/research/',
+            type: 'GET',
+            dataType: 'json',
+            success: function (result) {
+
+                physicalResults = getPA(result);
+            },
+
+            beforeSend: setHeader //set the access token before making the AJAX call
+        });
+
+        $.when(medRequest, symptomRequest, pdqRequest, physicalRequest).then(function() {
+
+            $.ajax({
+                url: 'json/healthKeywords.json',
+                type: 'GET',
+                dataType: 'json',
+                success: function (result) {
+
+                    medResults = printMeds(result, medications);
+                    symptomResults = printSymptoms(result, symptoms);
+
+                    //don't display the row if it has no data
+                    for (let i = 0; i < medResults.length; i++) {
+                        if (medResults[i] == "N/A" && symptomResults[i] == "N/A"
+                            && formatPDQ((pdqResults[i])) == "N/A" && physicalResults[i] == "N/A") {
+                            continue;
+                        }
+
+                        //display data
+                        $('#data-table').append(
+                            '<tr onclick=\'getUserData(this)\' data-toggle=\'modal\' data-target=\'#userDataModal\'>' +
+                            '<td>' + (i + 1) + '</td>' +
+                            '<td>' + medResults[i] + '</td>' +
+                            '<td>' + symptomResults[i] + '</td>' +
+                            '<td>' + formatPDQ(pdqResults[i]) + '</td>' +
+                            '<td>' + physicalResults[i] + '</td>' +
+                            '</tr>'
+                        );
+
                     }
 
-                    //display data
-                    $('#data-table').append(
-                        '<tr onclick=\'getUserData(this)\' data-toggle=\'modal\' data-target=\'#userDataModal\'>' +
-                        '<td>' + (i + 1) + '</td>' +
-                        '<td>' + medResults[i] + '</td>' +
-                        '<td>' + symptomResults[i].toString().replace(/,/g, "\n") + '</td>' +
-                        '<td>' + formatPDQ(pdqResults[i]) + '</td>' +
-                        '<td>' + physicalResults[i] + '</td>' +
-                        '</tr>'
-                    );
-
                 }
-
-            },
-            beforeSend: setHeader //set the access token before making the AJAX call
+            });
         });
+
     });
-}
-
-/**
- * Unit tests that execute after page has loaded
- */
-function unitTests() {
-    window.onload = function() {
-        //get data from API
-        $.ajax({
-            url: 'https://bwp-app.herokuapp.com/api/research/',
-            type: 'GET',
-            dataType: 'json',
-            success: function (result) {
-                testPatientsNoData(result);
-            },
-            beforeSend: setHeader //set the access token before making the AJAX call
-        });
-    }
 }
 
 /**
@@ -86,7 +123,6 @@ function setHeader(header) {
  * @returns {Array} of strings listing each patients medication
  */
 function getMeds(patient) {
-
     let medsArray = [];
     for (let i = 0; i < patient.length; i++) {
 
@@ -97,7 +133,7 @@ function getMeds(patient) {
 
             if (medications[med] == true) {
 
-                patientMed += med + ", ";
+                patientMed += med + ", <br>";
             }
         }
 
@@ -112,11 +148,60 @@ function getMeds(patient) {
     return medsArray;
 }
 
+// load JSON file containing health keywords
+function printMeds(result, medsArray) {
+
+    let newArray = [];
+
+    for (let i = 0; i < medsArray.length; i++) {
+
+        // Creates an array of medications for each patient
+        let patientMeds = medsArray[i].split(", <br>");
+        let medsString = "";
+
+        if (patientMeds[0] == "N/A") {
+
+            // Print an empty string if the patient has no
+            // recorded medications
+            medsString += "N/A";
+
+        } else {
+
+            for (let j = 0; j < patientMeds.length - 1; j++) {
+
+                // Compare each medication name to each key in the
+                // health keywords JSON file
+                $.each(result, function (index, value) {
+
+                    // If keywords match, print the formatted version of
+                    // that medication from the JSON file
+                    if (patientMeds[j] == index) {
+
+                        if (j == (patientMeds.length - 2)) {
+
+                            medsString += value;
+
+                        } else {
+
+                            medsString += value + ", <br>";
+                        }
+                    }
+                });
+            }
+        }
+
+        newArray.push(medsString);
+    }
+
+    return newArray;
+}
+
 /**
  * Gets the symptoms for each patient
  * @param patient table row representing a patient
  * @returns {Array} of each patients symptoms
  */
+// display the symptoms of each patient
 function getSymptoms(patient) {
     let allPatientSymptoms = [];
 
@@ -127,14 +212,18 @@ function getSymptoms(patient) {
         // check for tremor types
         let tremorTypes = patient[i].parkinsonSymptoms.tremors;
         for (let tremor in tremorTypes) {
+
             if (tremorTypes[tremor] == true) {
+
                 symptoms.push(tremor);
             }
         }
         // check for postural changes
         let posturalChanges = patient[i].parkinsonSymptoms.posturalChanges;
         for (let changes in posturalChanges) {
+
             if (posturalChanges[changes] == true) {
+
                 symptoms.push(changes);
             }
         }
@@ -142,7 +231,9 @@ function getSymptoms(patient) {
         // check for misc symptoms
         let miscSymptoms = patient[i].parkinsonSymptoms;
         for (let misc in miscSymptoms) {
+
             if (miscSymptoms[misc] == true) {
+
                 symptoms.push(misc);
             }
         }
@@ -150,7 +241,9 @@ function getSymptoms(patient) {
         // check for health problems
         let healthProblems = patient[i].healthAndHeart.health;
         for (let health in healthProblems) {
+
             if (healthProblems[health] == true) {
+
                 symptoms.push(health);
             }
         }
@@ -158,19 +251,91 @@ function getSymptoms(patient) {
         // check for heart problems
         let heartProblems = patient[i].healthAndHeart.heart;
         for (let heart in heartProblems) {
+
             if (heartProblems[heart] == true) {
+
                 symptoms.push(heart);
             }
         }
 
         // check if array is empty
         if (symptoms.length == 0) {
+
             symptoms.push("N/A");
         }
+
         allPatientSymptoms.push(symptoms);
     }
 
     return allPatientSymptoms;
+}
+
+function printSymptoms(result, symptomsArray) {
+
+    let newSymptoms= [];
+
+    for (let i = 0; i < symptomsArray.length; i++) {
+
+        let patientSymptoms = symptomsArray[i];
+        let symptomString = "";
+
+        // Print an empty string if the patient has no
+        // recorded symptoms
+        if (patientSymptoms[0] == "N/A") {
+
+            symptomString += "N/A";
+
+        } else {
+
+            for (let j = 0; j < patientSymptoms.length; j++) {
+
+                // Compare each medication name to each key in the
+                // health keywords JSON file
+                $.each(result, function (index, value) {
+
+                    // If a key in the JSON file is nested, compare the keys within it
+                    if ((Object.getPrototypeOf(result[index]) == Object.getPrototypeOf(result))) {
+
+                        // If keywords match, print the formatted version of
+                        // that symptom from the JSON file
+                        $.each(result[index], function (newIndex, newValue) {
+
+                            if (patientSymptoms[j] == newIndex) {
+
+                                if (j == (patientSymptoms.length - 1)) {
+
+                                    symptomString += newValue + "<br>";
+
+                                } else {
+
+                                    symptomString += newValue + ", <br>";
+                                }
+                            }
+                        });
+
+                        // Compare each symptom name to each key in the
+                        // health keywords JSON file
+                    } else if (patientSymptoms[j] == index) {
+
+                        // If keywords match, print the formatted version of
+                        // that symptom from the JSON file
+                        if (j == (patientSymptoms.length - 1)) {
+
+                            symptomString += value;
+
+                        } else {
+
+                            symptomString += value + ", <br>";
+                        }
+                    }
+                });
+            }
+        }
+
+        newSymptoms.push(symptomString);
+    }
+
+    return newSymptoms;
 }
 
 /**
@@ -214,7 +379,7 @@ function formatPDQ(pdq) {
     let regex = /[{"}]/g;
     pdq = pdq.replace(regex, "");
     pdq = pdq.replace(/:/g, ": ");
-    pdq = pdq.replace(/,/g, ", ");
+    pdq = pdq.replace(/,/g, ",<br>");
 
     return pdq;
 }
@@ -300,7 +465,7 @@ function getPA(patient) {
         let upScore = formattedScore.UpScore;
         let sitStandScore = formattedScore.S2SScore;
 
-        physicalAssessmentArray.push("FAB: " + fab + ", " + "UpScore: " + upScore + ", " + "Sit to Stand Score: " + sitStandScore);
+        physicalAssessmentArray.push("Fullerton Advanced Balance: " + fab + ",<br>" + "Timed Up And Go: " + upScore + ",<br>" + "Sit to Stand Score: " + sitStandScore);
 
     }
     return physicalAssessmentArray;
