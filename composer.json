@@ -1,0 +1,24 @@
+{
+  "name": "codedink/BWP-Portal",
+  "authors": [
+    {
+      "name": "Jordan Smith",
+      "email": "jsmith66@mail.greenriver.edu"
+    },
+    {
+      "name": "Brooks Eshe",
+      "email": "Beshe@mail.greenriver.edu"
+    },
+    {
+      "name": "Sam Gabriel",
+      "email": "Sgabriel2@mail.greenriver.edu"
+    },
+    {
+      "name": "Celine Leano",
+      "email": "cLeano@mail.greenriver.edu"
+    }
+  ],
+  "require":{
+    "bcosca/fatfree-core": "dev-master"
+  }
+}
