@@ -1,0 +1,49 @@
+<!--
+CodedInk
+BWP-Portal/model/filter-modal.html
+Modal that contains categories and checkboxes to filter the table
+-->
+<div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="filterModalLabel">Filter</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <ul class="nav nav-tabs form-tabs">
+                <li class="nav-item"><a data-toggle="tab" href="#medication" class="nav-link active">Medication</a></li>
+                <li class="nav-item"><a data-toggle="tab" href="#symptoms" class="nav-link">Symptoms</a></li>
+                <li class="nav-item"><a data-toggle="tab" href="#pdq" class="nav-link">PDQ</a></li>
+                <li class="nav-item"><a data-toggle="tab" href="#physical" class="nav-link">Physical Assessment</a></li>
+            </ul>
+
+            <form method="post" id="filterForm" action="#">
+                <div class="modal-body">
+                    <div class="tab-content">
+                        <!-- Medication filter -->
+                        <include href="views/modal/medication.html"></include>
+
+                        <!-- Symptoms filters -->
+                        <include href="views/modal/symptoms.html"></include>
+
+                        <!-- PDQ filters -->
+                        <include href="views/modal/pdq.html"></include>
+
+                        <!-- Physical Assessment filters -->
+                        <include href="views/modal/physical.html"></include>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button name="filter" id="filter" class="btn btn-primary" data-dismiss="modal">
+                            Filter
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
