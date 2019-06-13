@@ -194,7 +194,8 @@ function filterPhysicalAssessment(index, row, filterKey)
 
     //check if score is within given range
     if (filterKey === "low") {
-        if(assessmentType === "FullertonAdvancedBalance" || assessmentType === "SittoStandScore")
+        if(assessmentType === "FullertonAdvancedBalance" +
+            "" || assessmentType === "SittoStandScore")
         {
             if (categoryAssessment <= 33) {
                 return true;
@@ -209,7 +210,7 @@ function filterPhysicalAssessment(index, row, filterKey)
         }
     }
     else if (filterKey === "medium") {
-        if(assessmentType === "FullertonAdvancedBalanced" || assessmentType === "SittoStandScore")
+        if(assessmentType === "FullertonAdvancedBalance" || assessmentType === "SittoStandScore")
         {
             if (categoryAssessment > 33 && categoryAssessment <= 66) {
                 return true
@@ -224,7 +225,7 @@ function filterPhysicalAssessment(index, row, filterKey)
         }
     }
     else if (filterKey === "high") {
-        if(assessmentType === "FullertonAdvancedBalanced" || assessmentType === "SittoStandScore")
+        if(assessmentType === "FullertonAdvancedBalance" || assessmentType === "SittoStandScore")
         {
             if (categoryAssessment > 66) {
                 return true;
